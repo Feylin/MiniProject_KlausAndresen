@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="PostgreSQL - Large_Systems_MiniProject@localhost" uuid="002c8d20-2286-43b2-8345-75108c9decf9">
+      <secret-storage>master_key</secret-storage>
+      <user-name>postgres</user-name>
+      <schema-pattern>Large_Systems_MiniProject.pg_catalog Large_Systems_MiniProject.public</schema-pattern>
+      <default-schemas>Large_Systems_MiniProject.pg_catalog Large_Systems_MiniProject.public</default-schemas>
+    </data-source>
+  </component>
+</project>
