@@ -10,6 +10,8 @@ import java.util.List;
 public interface CountryService {
     void deleteCountry(Country country);
 
+    void deleteCountry(int id);
+
     Country getCountry(int id);
 
     List<Country> getAllCountries();

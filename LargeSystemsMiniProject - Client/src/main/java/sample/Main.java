@@ -1,6 +1,8 @@
 package sample;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -9,6 +11,8 @@ import javafx.stage.Stage;
 import sample.Controllers.CountryEditDialogController;
 import sample.Controllers.OverviewController;
 import sample.Model.Country;
+import sample.Service.ServiceConnector;
+import sample.Service.ServiceConnectorImpl;
 
 import java.io.IOException;
 import java.util.Currency;
@@ -17,8 +21,13 @@ import java.util.Locale;
 
 public class Main extends Application {
 
+    private ServiceConnector service = ServiceConnectorImpl.INSTANCE;
     private Stage primaryStage;
     private HashMap<String, String[]> countryMap = new HashMap<>();
+    /**
+     * The data as an observable list of champions.
+     */
+    private ObservableList<Country> countryData = FXCollections.observableArrayList();
 
     public Main() {
         String[] locales = Locale.getISOCountries();
@@ -32,6 +41,8 @@ public class Main extends Application {
 
             countryMap.put(countryName, new String[]{countryAlpha2, countryAlpha3, String.valueOf(countryCurrency)});
         }
+
+        countryData.addAll(service.getAllCountries());
     }
 
     @Override
@@ -81,7 +92,7 @@ public class Main extends Application {
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);
 
-            // Set the champion into the controller
+            // Set the country into the controller
             CountryEditDialogController controller = loader.getController();
             controller.setDialogStage(dialogStage);
             controller.setCountry(country);
@@ -99,6 +110,10 @@ public class Main extends Application {
 
     public HashMap<String, String[]> getCountryMap() {
         return countryMap;
+    }
+
+    public ObservableList<Country> getCountryData() {
+        return countryData;
     }
 
     public static void main(String[] args) {

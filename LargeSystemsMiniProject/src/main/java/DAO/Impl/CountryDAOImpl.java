@@ -20,6 +20,11 @@ public class CountryDAOImpl implements CountryDAO {
         getCurrentSession().delete(country);
     }
 
+    public void delete(int id) {
+        Country country = (Country) getCurrentSession().load(Country.class, id);
+        getCurrentSession().delete(country);
+    }
+
     public Country get(int id) {
         return (Country) getCurrentSession().createCriteria(Country.class).
                 add(Restrictions.eq("id", id)).

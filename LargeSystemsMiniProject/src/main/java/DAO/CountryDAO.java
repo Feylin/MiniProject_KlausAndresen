@@ -13,6 +13,8 @@ public interface CountryDAO {
 
     void delete(Country country);
 
+    void delete(int id);
+
     Country get(int id);
 
     List<Country> listAllCountries();

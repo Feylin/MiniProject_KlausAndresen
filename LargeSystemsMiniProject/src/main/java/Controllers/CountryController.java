@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -28,14 +29,21 @@ public class CountryController {
         return service.getAllCountries();
     }
 
-    @RequestMapping(value = "/country/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/countries/{id}", method = RequestMethod.GET)
     public Country getCountry(@PathVariable("id") int id) {
         return service.getCountry(id);
     }
 
-    @RequestMapping(value = "/deleteCountry/{id}", method = RequestMethod.DELETE)
-    public void deleteCountry(@PathVariable("id") int id) {
-        getAllCountries().remove(id);
+//    @RequestMapping(value = "/deleteCountry/{country}", method = RequestMethod.DELETE)
+//    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+//    public void deleteCountry(@PathVariable("country") Country country) {
+//        service.deleteCountry(country);
+//    }
+
+    @RequestMapping(value = "deleteCountry/{id}", method = RequestMethod.DELETE)
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable(value = "id") int id) {
+        service.deleteCountry(id);
     }
 
 //    @RequestMapping(value = "/addCountry/{name}/{currency}/{iso2code}", method = RequestMethod.PUT)

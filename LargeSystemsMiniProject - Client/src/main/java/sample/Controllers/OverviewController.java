@@ -1,18 +1,26 @@
 package sample.Controllers;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
-import javafx.scene.input.KeyEvent;
 import sample.Main;
 import sample.Model.Country;
-
-import java.util.Currency;
-import java.util.HashMap;
-import java.util.Locale;
+import sample.Service.ServiceConnector;
+import sample.Service.ServiceConnectorImpl;
 
 public class OverviewController {
     @FXML private TextArea txtDescription;
-    private HashMap<String, String[]> countryMap = new HashMap<>();
+    @FXML private TableView<Country> tblCountries;
+    @FXML private TableColumn<Country, String> tblNameColumn;
+    @FXML private TableColumn<Country, String> tblCurrencyColumn;
+    private ServiceConnector service = ServiceConnectorImpl.INSTANCE;
+    private StringProperty nameProperty = new SimpleStringProperty();
+    private StringProperty currencyProperty = new SimpleStringProperty();
 
     private Main mainApplication;
 
@@ -22,6 +30,9 @@ public class OverviewController {
      */
     public void setMainApplication(Main mainApplication) {
         this.mainApplication = mainApplication;
+
+        // Add observable list data to the table
+        tblCountries.setItems(mainApplication.getCountryData());
     }
 
     /**
@@ -29,17 +40,7 @@ public class OverviewController {
      * The constructor is called before the initialize() method.
      */
     public OverviewController() {
-        String[] locales = Locale.getISOCountries();
 
-        for (String countryCode : locales) {
-            Locale obj = new Locale.Builder().setLanguage("en").setRegion(countryCode).build();
-            String countryName = obj.getDisplayCountry(Locale.ENGLISH);
-            String countryAlpha2 = obj.getCountry();
-            String countryAlpha3 = obj.getISO3Country();
-            Currency countryCurrency = Currency.getInstance(obj);
-
-            countryMap.put(countryName, new String[]{countryAlpha2, countryAlpha3, String.valueOf(countryCurrency)});
-        }
     }
 
     /**
@@ -48,39 +49,15 @@ public class OverviewController {
      */
     @FXML
     private void initialize() {
-        // <<<-----TEST---->>>
-//        RestTemplate restTemplate = new RestTemplate();
-////        Country country = restTemplate.getForObject("http://localhost:8080/country/1", Country.class);
-//
-//        Country country = new Country().setName("ds").setAlpha2Code("ds").setCurrency("DS");
-//
-//        restTemplate.postForObject("http://localhost:8080/addCountry/country", country, Country.class);
-//
-////        lblAlpha2.setText("Hentet fra min rest server " +country.getName());
-    }
-
-    public void handleInput(KeyEvent event) {
-//        String s = txtName.getText().trim();
-//
-//        try {
-//            if (event.getCode() == KeyCode.BACK_SPACE)
-//                s = s.substring(0, s.length() - 1);
-//            else s += event.getText();
-//            if (countryMap.keySet().contains(s)) {
-//                lblError.setText("Valid");
-//                lblAlpha2.setText(countryMap.get(s)[0]); // Alpha2
-//                lblAlpha3.setText(countryMap.get(s)[1]); // Alpha3
-//                lblCurrency.setText(countryMap.get(s)[2]); // Currency
-//            }
-//            else {
-//                lblError.setText("Invalid");
-//                lblAlpha2.setText("");
-//                lblAlpha3.setText("");
-//                lblCurrency.setText("");
-//            }
-//        } catch (StringIndexOutOfBoundsException ignored) {
-//
-//        }
+        // Initialize the champion table with the two columns.
+        tblNameColumn.setCellValueFactory(cellData -> {
+            nameProperty.setValue(cellData.getValue().getName());
+            return nameProperty;
+        });
+        tblCurrencyColumn.setCellValueFactory(cellData -> {
+            currencyProperty.setValue(cellData.getValue().getCurrency());
+            return currencyProperty;
+        });
     }
 
     /**
@@ -88,7 +65,24 @@ public class OverviewController {
      */
     @FXML
     private void btnDeleteCountry() {
+        int tableIndex = tblCountries.getSelectionModel().getSelectedIndex();
+        int selectedCountryIndex = tblCountries.getSelectionModel().getSelectedItem().getId();
+        if (selectedCountryIndex >= 0) {
+            service.deleteCountry(selectedCountryIndex);
+            tblCountries.getItems().remove(tableIndex);
+        } else {
+            // Nothing selected.
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.initOwner(mainApplication.getPrimaryStage());
+            alert.setTitle("No Selection");
+            alert.setHeaderText("No Country Selected");
+            alert.setContentText("Please select a Country in the table.");
 
+            alert.showAndWait();
+        }
+        tblCountries.requestFocus();
+        tblCountries.getSelectionModel().select(0);
+        tblCountries.getFocusModel().focus(0);
     }
 
     /**
@@ -97,12 +91,13 @@ public class OverviewController {
      */
     @FXML
     private void btnNewClicked() {
-        Country tempChampion = new Country();
-        boolean okClicked = mainApplication.showChampionEditDialog(tempChampion);
-//        if (okClicked) {
-//            mainApplication.getChampionData().add(tempChampion);
-//            FXCollections.sort(mainApplication.getChampionData());
-//        }
+        Country tempCountry = new Country();
+        boolean okClicked = mainApplication.showChampionEditDialog(tempCountry);
+        if (okClicked) {
+            service.saveCountry(tempCountry);
+            mainApplication.getCountryData().add(tempCountry);
+            FXCollections.sort(mainApplication.getCountryData());
+        }
     }
 
     /**

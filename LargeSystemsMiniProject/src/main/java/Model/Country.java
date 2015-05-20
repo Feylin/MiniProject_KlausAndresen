@@ -19,6 +19,7 @@ public class Country implements Serializable {
     private String name;
     private String currency;
     private String alpha2Code;
+    private String alpha3Code;
 
     public Country() {
 
@@ -58,6 +59,15 @@ public class Country implements Serializable {
 
     public Country setAlpha2Code(String alpha2Code) {
         this.alpha2Code = alpha2Code;
+        return this;
+    }
+
+    public String getAlpha3Code() {
+        return alpha3Code;
+    }
+
+    public Country setAlpha3Code(String alpha3Code) {
+        this.alpha3Code = alpha3Code;
         return this;
     }
 }
