@@ -2,17 +2,37 @@ package sample;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import sample.Controllers.CountryEditDialogController;
 import sample.Controllers.OverviewController;
+import sample.Model.Country;
 
 import java.io.IOException;
+import java.util.Currency;
+import java.util.HashMap;
+import java.util.Locale;
 
 public class Main extends Application {
 
     private Stage primaryStage;
+    private HashMap<String, String[]> countryMap = new HashMap<>();
+
+    public Main() {
+        String[] locales = Locale.getISOCountries();
+
+        for (String countryCode : locales) {
+            Locale obj = new Locale.Builder().setLanguage("en").setRegion(countryCode).build();
+            String countryName = obj.getDisplayCountry(Locale.ENGLISH);
+            String countryAlpha2 = obj.getCountry();
+            String countryAlpha3 = obj.getISO3Country();
+            Currency countryCurrency = Currency.getInstance(obj);
+
+            countryMap.put(countryName, new String[]{countryAlpha2, countryAlpha3, String.valueOf(countryCurrency)});
+        }
+    }
 
     @Override
     public void start(Stage primaryStage) {
@@ -38,6 +58,47 @@ public class Main extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Opens a dialog to edit details for the specified country.
+     * If the user clicks OK, the changes are saved into the provided champion object and true is returned.
+     * @param country the champion object to be edited.
+     * @return true is the user clicked OK, false otherwise.
+     */
+    public boolean showChampionEditDialog(Country country) {
+        try {
+            // Load the fxml file and create a new stage for the popup dialog.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/fxml/CountryEditDialog.fxml"));
+            AnchorPane page = loader.load();
+
+            // Create the dialog Stage.
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Edit Country");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            // Set the champion into the controller
+            CountryEditDialogController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.setCountry(country);
+            controller.setMainApplication(this);
+
+            // Show the dialog and wait until the user closes it.
+            dialogStage.showAndWait();
+
+            return controller.isOkClicked();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public HashMap<String, String[]> getCountryMap() {
+        return countryMap;
     }
 
     public static void main(String[] args) {

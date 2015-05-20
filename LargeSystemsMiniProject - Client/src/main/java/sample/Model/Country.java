@@ -13,15 +13,17 @@ public class Country implements Comparable<Country>, Serializable {
     private String name;
     private String currency;
     private String alpha2Code;
+    private String alpha3Code;
 
     public Country() {
 
     }
 
-    public Country(String name, String currency, String alpha2Code) {
+    public Country(String name, String currency, String alpha2Code, String alpha3Code) {
         this.name = name;
         this.currency = currency;
         this.alpha2Code = alpha2Code;
+        this.alpha3Code = alpha3Code;
     }
 
     public int getId() {
@@ -52,6 +54,15 @@ public class Country implements Comparable<Country>, Serializable {
 
     public Country setAlpha2Code(String alpha2Code) {
         this.alpha2Code = alpha2Code;
+        return this;
+    }
+
+    public String getAlpha3Code() {
+        return alpha3Code;
+    }
+
+    public Country setAlpha3Code(String alpha3Code) {
+        this.alpha3Code = alpha3Code;
         return this;
     }
 
