@@ -33,13 +33,13 @@ public enum JSONRestCountries {
             JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent(), StandardCharsets.UTF_8));
             JsonArray rootObj = root.getAsJsonArray();
 
-            int arraySize = rootObj.size();
+            int firstObject = 0;
 
-            attributes.put("population", rootObj.get(arraySize - 1).getAsJsonObject().get("population").getAsString());
-            attributes.put("capital", rootObj.get(arraySize - 1).getAsJsonObject().get("capital").getAsString());
-            attributes.put("region", rootObj.get(arraySize - 1).getAsJsonObject().get("region").getAsString());
+            attributes.put("population", rootObj.get(firstObject).getAsJsonObject().get("population").getAsString());
+            attributes.put("capital", rootObj.get(firstObject).getAsJsonObject().get("capital").getAsString());
+            attributes.put("region", rootObj.get(firstObject).getAsJsonObject().get("region").getAsString());
 
-            JsonArray timezones = rootObj.get(arraySize - 1).getAsJsonObject().get("timezones").getAsJsonArray();
+            JsonArray timezones = rootObj.get(firstObject).getAsJsonObject().get("timezones").getAsJsonArray();
             attributes.put("timezone", timezones.get(timezones.size() - 1).getAsString());
 
 //            JsonElement timezones = rootObj.get(arraySize - 1).getAsJsonObject().get("timezones");
