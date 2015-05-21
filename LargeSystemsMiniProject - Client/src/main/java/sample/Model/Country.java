@@ -14,6 +14,11 @@ public class Country implements Comparable<Country>, Serializable {
     private String currency;
     private String alpha2Code;
     private String alpha3Code;
+    private String description;
+    private String capital;
+    private String region;
+    private String population;
+    private String timezone;
 
     public Country() {
 
@@ -63,6 +68,51 @@ public class Country implements Comparable<Country>, Serializable {
 
     public Country setAlpha3Code(String alpha3Code) {
         this.alpha3Code = alpha3Code;
+        return this;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Country setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public String getCapital() {
+        return capital;
+    }
+
+    public Country setCapital(String capital) {
+        this.capital = capital;
+        return this;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public Country setRegion(String region) {
+        this.region = region;
+        return this;
+    }
+
+    public String getPopulation() {
+        return population;
+    }
+
+    public Country setPopulation(String population) {
+        this.population = population;
+        return this;
+    }
+
+    public String getTimezone() {
+        return timezone;
+    }
+
+    public Country setTimezone(String timezone) {
+        this.timezone = timezone;
         return this;
     }
 

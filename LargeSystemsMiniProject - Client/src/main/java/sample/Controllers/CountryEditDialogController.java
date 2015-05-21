@@ -2,6 +2,7 @@ package sample.Controllers;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -79,7 +80,16 @@ public class CountryEditDialogController {
      */
     @FXML
     private void btnOkClicked() {
-        if (isInputValid) {
+        if (mainApplication.getCountryData().stream().anyMatch(c -> c.getName().equals(txtName.getText().trim()))) {
+            // Nothing selected.
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.initOwner(mainApplication.getPrimaryStage());
+            alert.setTitle("Already exists");
+            alert.setHeaderText("Country already exists.");
+            alert.setContentText("Please enter a country that does not exist.");
+
+            alert.showAndWait();
+        } else if (isInputValid) {
             country.setName(txtName.getText().trim());
             country.setAlpha2Code(txtAlpha2.getText().trim());
             country.setAlpha3Code(txtAlpha3.getText().trim());

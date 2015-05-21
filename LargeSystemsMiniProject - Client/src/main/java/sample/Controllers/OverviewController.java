@@ -5,9 +5,11 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import sample.Main;
 import sample.Model.Country;
 import sample.Service.ServiceConnector;
@@ -18,6 +20,14 @@ public class OverviewController {
     @FXML private TableView<Country> tblCountries;
     @FXML private TableColumn<Country, String> tblNameColumn;
     @FXML private TableColumn<Country, String> tblCurrencyColumn;
+    @FXML private Label lblName;
+    @FXML private Label lblCapital;
+    @FXML private Label lblRegion;
+    @FXML private Label lblPopulation;
+    @FXML private Label lblCurrency;
+    @FXML private Label lblAlpha2;
+    @FXML private Label lblAlpha3;
+    @FXML private Label lblTimezone;
     private ServiceConnector service = ServiceConnectorImpl.INSTANCE;
     private StringProperty nameProperty = new SimpleStringProperty();
     private StringProperty currencyProperty = new SimpleStringProperty();
@@ -58,6 +68,36 @@ public class OverviewController {
             currencyProperty.setValue(cellData.getValue().getCurrency());
             return currencyProperty;
         });
+
+        // Listen for selection changes and show the champion details when changed.
+        tblCountries.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> showCountryDetails(service.getCountry(newValue.getId())));
+    }
+
+    private void showCountryDetails(Country country) {
+        if (country != null) {
+            // Fill the labels with info from the champion object.
+            lblName.setText(country.getName());
+            lblAlpha2.setText(country.getAlpha2Code());
+            lblAlpha3.setText(country.getAlpha3Code());
+            lblCapital.setText(country.getCapital());
+            lblCurrency.setText(country.getCurrency());
+            lblPopulation.setText(country.getPopulation());
+            lblRegion.setText(country.getRegion());
+            lblTimezone.setText(country.getTimezone());
+            txtDescription.setText(country.getDescription());
+        } else {
+            // Champion is null, remove all the text.
+            lblName.setText("");
+            lblAlpha2.setText("");
+            lblAlpha3.setText("");
+            lblCapital.setText("");
+            lblCurrency.setText("");
+            lblPopulation.setText("");
+            lblRegion.setText("");
+            lblTimezone.setText("");
+            txtDescription.setText("");
+        }
     }
 
     /**

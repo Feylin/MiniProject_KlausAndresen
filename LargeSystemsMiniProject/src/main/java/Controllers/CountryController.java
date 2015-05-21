@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -22,41 +23,30 @@ import java.util.List;
 public class CountryController {
     @Autowired
     CountryService service;
+    JSONCountryDescription descriptionApi = JSONCountryDescription.INSTANCE;
+    JSONRestCountries restCountriesApi = JSONRestCountries.INSTANCE;
 
     @RequestMapping(value = "/countries", method = RequestMethod.GET)
-    private List<Country> getAllCountries()
-    {
+    private List<Country> getAllCountries() {
         return service.getAllCountries();
     }
 
     @RequestMapping(value = "/countries/{id}", method = RequestMethod.GET)
     public Country getCountry(@PathVariable("id") int id) {
-        return service.getCountry(id);
+        Country country = service.getCountry(id);
+        HashMap<String, String> attributes = restCountriesApi.getCountryAttributes(country);
+        return country.setDescription(descriptionApi.getDescription(country))
+                .setCapital(attributes.get("capital"))
+                .setPopulation(attributes.get("population"))
+                .setRegion(attributes.get("region"))
+                .setTimezone(attributes.get("timezone"));
     }
-
-//    @RequestMapping(value = "/deleteCountry/{country}", method = RequestMethod.DELETE)
-//    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-//    public void deleteCountry(@PathVariable("country") Country country) {
-//        service.deleteCountry(country);
-//    }
 
     @RequestMapping(value = "deleteCountry/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delete(@PathVariable(value = "id") int id) {
         service.deleteCountry(id);
     }
-
-//    @RequestMapping(value = "/addCountry/{name}/{currency}/{iso2code}", method = RequestMethod.PUT)
-//    public void putCountry(@PathVariable("name") String name,
-//                           @PathVariable("currency") String currency,
-//                           @PathVariable("iso2code") String iso2code) {
-//        service.saveCountry(new Country().setName(name).setCurrency(currency).setAlpha2Code(iso2code));
-//    }
-
-//    @RequestMapping(value = "/addCountry/{country}", method = RequestMethod.POST)
-//    public void putCountry(@PathVariable("country") Country country) {
-//        service.saveCountry(country);
-//    }
 
     @RequestMapping(value = "/updateCountry/country", method = RequestMethod.PUT)
     public @ResponseBody String updateCountry(@RequestBody Country country){
