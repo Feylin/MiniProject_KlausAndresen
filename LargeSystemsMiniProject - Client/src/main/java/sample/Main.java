@@ -113,6 +113,7 @@ public class Main extends Application {
     }
 
     public ObservableList<Country> getCountryData() {
+        FXCollections.sort(countryData);
         return countryData;
     }
 

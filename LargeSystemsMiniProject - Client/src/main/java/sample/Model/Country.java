@@ -19,6 +19,7 @@ public class Country implements Comparable<Country>, Serializable {
     private String region;
     private String population;
     private String timezone;
+    private String image;
 
     public Country() {
 
@@ -29,6 +30,11 @@ public class Country implements Comparable<Country>, Serializable {
         this.currency = currency;
         this.alpha2Code = alpha2Code;
         this.alpha3Code = alpha3Code;
+    }
+
+    public Country setId(int id) {
+        this.id = id;
+        return this;
     }
 
     public int getId() {
@@ -113,6 +119,15 @@ public class Country implements Comparable<Country>, Serializable {
 
     public Country setTimezone(String timezone) {
         this.timezone = timezone;
+        return this;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public Country setImage(String image) {
+        this.image = image;
         return this;
     }
 

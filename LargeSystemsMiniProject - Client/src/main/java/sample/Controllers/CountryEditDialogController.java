@@ -21,7 +21,6 @@ public class CountryEditDialogController {
     @FXML private TextField txtAlpha2;
     @FXML private TextField txtAlpha3;
     @FXML private TextField txtCurrency;
-
     private Stage dialogStage;
     private Country country;
     private boolean okClicked = false;
@@ -121,11 +120,13 @@ public class CountryEditDialogController {
                 txtAlpha2.setText(countryMap.get(s)[0]); // Alpha2
                 txtAlpha3.setText(countryMap.get(s)[1]); // Alpha3
                 txtCurrency.setText(countryMap.get(s)[2]); // Currency
+                removeRed(txtName);
                 removeRed(txtAlpha2);
                 removeRed(txtAlpha3);
                 removeRed(txtCurrency);
             }
             else {
+                setRed(txtName);
                 txtAlpha2.setText("");
                 txtAlpha3.setText("");
                 txtCurrency.setText("");

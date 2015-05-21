@@ -39,7 +39,8 @@ public class CountryController {
                 .setCapital(attributes.get("capital"))
                 .setPopulation(attributes.get("population"))
                 .setRegion(attributes.get("region"))
-                .setTimezone(attributes.get("timezone"));
+                .setTimezone(attributes.get("timezone"))
+                .setImage("http://www.geonames.org/flags/x/" + country.getAlpha2Code().toLowerCase() + ".gif");
     }
 
     @RequestMapping(value = "deleteCountry/{id}", method = RequestMethod.DELETE)

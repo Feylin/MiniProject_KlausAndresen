@@ -1,10 +1,8 @@
 package Controllers;
 
 import Model.Country;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
@@ -14,7 +12,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Administrator on 21-05-2015.
@@ -44,6 +41,9 @@ public enum JSONRestCountries {
 
             JsonArray timezones = rootObj.get(arraySize - 1).getAsJsonObject().get("timezones").getAsJsonArray();
             attributes.put("timezone", timezones.get(timezones.size() - 1).getAsString());
+
+//            JsonElement timezones = rootObj.get(arraySize - 1).getAsJsonObject().get("timezones");
+//            attributes.put("timezone", timezones.toString());
 
             return attributes;
         } catch (IOException e) {

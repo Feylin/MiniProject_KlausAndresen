@@ -10,6 +10,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import sample.Main;
 import sample.Model.Country;
 import sample.Service.ServiceConnector;
@@ -28,6 +29,7 @@ public class OverviewController {
     @FXML private Label lblAlpha2;
     @FXML private Label lblAlpha3;
     @FXML private Label lblTimezone;
+    @FXML private ImageView countryImg;
     private ServiceConnector service = ServiceConnectorImpl.INSTANCE;
     private StringProperty nameProperty = new SimpleStringProperty();
     private StringProperty currencyProperty = new SimpleStringProperty();
@@ -69,7 +71,7 @@ public class OverviewController {
             return currencyProperty;
         });
 
-        // Listen for selection changes and show the champion details when changed.
+        // Listen for selection changes and show the country details when changed.
         tblCountries.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> showCountryDetails(service.getCountry(newValue.getId())));
     }
@@ -86,8 +88,9 @@ public class OverviewController {
             lblRegion.setText(country.getRegion());
             lblTimezone.setText(country.getTimezone());
             txtDescription.setText(country.getDescription());
+            countryImg.setImage(new Image(country.getImage()));
         } else {
-            // Champion is null, remove all the text.
+            // Country is null, remove all the text.
             lblName.setText("");
             lblAlpha2.setText("");
             lblAlpha3.setText("");
@@ -97,6 +100,7 @@ public class OverviewController {
             lblRegion.setText("");
             lblTimezone.setText("");
             txtDescription.setText("");
+            countryImg.setImage(null);
         }
     }
 

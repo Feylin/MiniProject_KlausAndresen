@@ -31,6 +31,8 @@ public class Country implements Serializable {
     private String timezone;
     @Transient
     private String population;
+    @Transient
+    private String image;
 
     public Country() {
 
@@ -40,6 +42,11 @@ public class Country implements Serializable {
         this.name = name;
         this.currency = currency;
         this.alpha2Code = alpha2Code;
+    }
+
+    public Country setId(int id) {
+        this.id = id;
+        return this;
     }
 
     public int getId() {
@@ -124,6 +131,15 @@ public class Country implements Serializable {
 
     public Country setPopulation(String population) {
         this.population = population;
+        return this;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public Country setImage(String image) {
+        this.image = image;
         return this;
     }
 }
