@@ -10,11 +10,11 @@ import java.util.List;
 public interface ServiceConnector {
     List<Country> getAllCountries();
 
-    Country getCountry(int id);
+    Country getCountry(String name);
 
     void saveCountry(Country country);
 
-    void deleteCountry(int id);
+    void deleteCountry(String name);
 
     void updateCountry(Country country);
 }

@@ -80,14 +80,8 @@ public class CountryEditDialogController {
     @FXML
     private void btnOkClicked() {
         if (mainApplication.getCountryData().stream().anyMatch(c -> c.getName().equals(txtName.getText().trim()))) {
-            // Nothing selected.
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.initOwner(mainApplication.getPrimaryStage());
-            alert.setTitle("Already exists");
-            alert.setHeaderText("Country already exists.");
-            alert.setContentText("Please enter a country that does not exist.");
-
-            alert.showAndWait();
+            // Country already exists.
+            showError("Already exists", "Country already exists.", "Please enter a country that does not exist.");
         } else if (isInputValid) {
             country.setName(txtName.getText().trim());
             country.setAlpha2Code(txtAlpha2.getText().trim());
@@ -96,7 +90,20 @@ public class CountryEditDialogController {
 
             okClicked = true;
             dialogStage.close();
+        } else {
+            // Invalid country.
+            showError("Invalid country", "Country is not valid.", "Please enter a country that actually exists.");
         }
+    }
+
+    private void showError(String title, String header, String content) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.initOwner(mainApplication.getPrimaryStage());
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+
+        alert.showAndWait();
     }
 
     /**

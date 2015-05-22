@@ -12,7 +12,11 @@ public interface CountryService {
 
     void deleteCountry(int id);
 
+    void deleteCountry(String name);
+
     Country getCountry(int id);
+
+    Country getCountry(String name);
 
     List<Country> getAllCountries();
 

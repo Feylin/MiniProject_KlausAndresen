@@ -26,9 +26,19 @@ public class CountryServiceImpl implements CountryService {
         countryDAO.delete(id);
     }
 
+    @Transactional(readOnly = false)
+    public void deleteCountry(String name) {
+        countryDAO.delete(name);
+    }
+
     @Transactional(readOnly = true)
     public Country getCountry(int id) {
         return countryDAO.get(id);
+    }
+
+    @Transactional(readOnly = true)
+    public Country getCountry(String name) {
+        return countryDAO.get(name);
     }
 
     @Transactional(readOnly = true)

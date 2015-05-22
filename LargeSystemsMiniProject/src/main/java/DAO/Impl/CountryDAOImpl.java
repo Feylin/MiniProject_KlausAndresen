@@ -25,9 +25,19 @@ public class CountryDAOImpl implements CountryDAO {
         getCurrentSession().delete(country);
     }
 
+    public void delete(String name) {
+        getCurrentSession().delete(get(name));
+    }
+
     public Country get(int id) {
         return (Country) getCurrentSession().createCriteria(Country.class).
                 add(Restrictions.eq("id", id)).
+                uniqueResult();
+    }
+
+    public Country get(String name) {
+        return (Country) getCurrentSession().createCriteria(Country.class).
+                add(Restrictions.eq("name", name)).
                 uniqueResult();
     }
 

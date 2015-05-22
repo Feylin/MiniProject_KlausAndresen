@@ -20,16 +20,16 @@ public enum ServiceConnectorImpl implements ServiceConnector {
         return Arrays.asList(countries);
     }
 
-    public Country getCountry(int id) {
-        return restTemplate.getForObject(REST_SERVICE_URL + "/countries/{id}", Country.class, id);
+    public Country getCountry(String name) {
+        return restTemplate.getForObject(REST_SERVICE_URL + "/countries/{name}", Country.class, name);
     }
 
     public void saveCountry(Country country) {
         restTemplate.postForObject(REST_SERVICE_URL + "addCountry/country", country, Country.class);
     }
 
-    public void deleteCountry(int id) {
-        restTemplate.delete(REST_SERVICE_URL + "deleteCountry/{country}", id);
+    public void deleteCountry(String name) {
+        restTemplate.delete(REST_SERVICE_URL + "deleteCountry/{name}", name);
     }
 
     public void updateCountry(Country country) {

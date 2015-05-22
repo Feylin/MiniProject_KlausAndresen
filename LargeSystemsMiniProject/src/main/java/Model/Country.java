@@ -1,11 +1,6 @@
 package Model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -17,6 +12,7 @@ public class Country implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(unique = true, nullable = false)
     private String name;
     private String currency;
     private String alpha2Code;
@@ -42,11 +38,6 @@ public class Country implements Serializable {
         this.name = name;
         this.currency = currency;
         this.alpha2Code = alpha2Code;
-    }
-
-    public Country setId(int id) {
-        this.id = id;
-        return this;
     }
 
     public int getId() {

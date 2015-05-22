@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -25,7 +27,7 @@ public enum JSONRestCountries {
         HashMap<String, String> attributes = new HashMap<>();
 
         try {
-            URL url = new URL(REST_COUNTRIES_URL + country.getName());
+            URL url = URLEncoder.getEncodedURLString(REST_COUNTRIES_URL + country.getName() + "?fullText=true");
             HttpURLConnection request = (HttpURLConnection) url.openConnection();
             request.connect();
 
@@ -42,11 +44,8 @@ public enum JSONRestCountries {
             JsonArray timezones = rootObj.get(firstObject).getAsJsonObject().get("timezones").getAsJsonArray();
             attributes.put("timezone", timezones.get(timezones.size() - 1).getAsString());
 
-//            JsonElement timezones = rootObj.get(arraySize - 1).getAsJsonObject().get("timezones");
-//            attributes.put("timezone", timezones.toString());
-
             return attributes;
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
         return attributes;

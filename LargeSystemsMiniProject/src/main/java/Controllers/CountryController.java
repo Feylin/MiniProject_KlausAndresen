@@ -31,9 +31,9 @@ public class CountryController {
         return service.getAllCountries();
     }
 
-    @RequestMapping(value = "/countries/{id}", method = RequestMethod.GET)
-    public Country getCountry(@PathVariable("id") int id) {
-        Country country = service.getCountry(id);
+    @RequestMapping(value = "/countries/{name}", method = RequestMethod.GET)
+    public Country getCountry(@PathVariable("name") String name) {
+        Country country = service.getCountry(name);
         HashMap<String, String> attributes = restCountriesApi.getCountryAttributes(country);
         return country.setDescription(descriptionApi.getDescription(country))
                 .setCapital(attributes.get("capital"))
@@ -43,10 +43,10 @@ public class CountryController {
                 .setImage("http://www.geonames.org/flags/x/" + country.getAlpha2Code().toLowerCase() + ".gif");
     }
 
-    @RequestMapping(value = "deleteCountry/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "deleteCountry/{name}", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable(value = "id") int id) {
-        service.deleteCountry(id);
+    public void delete(@PathVariable(value = "name") String name) {
+        service.deleteCountry(name);
     }
 
     @RequestMapping(value = "/updateCountry/country", method = RequestMethod.PUT)

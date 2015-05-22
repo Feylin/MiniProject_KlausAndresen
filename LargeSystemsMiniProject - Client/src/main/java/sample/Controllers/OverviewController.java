@@ -73,7 +73,13 @@ public class OverviewController {
 
         // Listen for selection changes and show the country details when changed.
         tblCountries.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) -> showCountryDetails(service.getCountry(newValue.getId())));
+                (observable, oldValue, newValue) -> {
+                    try {
+                        showCountryDetails(service.getCountry(newValue.getName()));
+                    } catch (NullPointerException ignored) {
+                        showCountryDetails(null);
+                    }
+                });
     }
 
     private void showCountryDetails(Country country) {
@@ -110,9 +116,9 @@ public class OverviewController {
     @FXML
     private void btnDeleteCountry() {
         int tableIndex = tblCountries.getSelectionModel().getSelectedIndex();
-        int selectedCountryIndex = tblCountries.getSelectionModel().getSelectedItem().getId();
-        if (selectedCountryIndex >= 0) {
-            service.deleteCountry(selectedCountryIndex);
+        Country selectedCountry = tblCountries.getSelectionModel().getSelectedItem();
+        if (selectedCountry != null) {
+            service.deleteCountry(selectedCountry.getName());
             tblCountries.getItems().remove(tableIndex);
         } else {
             // Nothing selected.

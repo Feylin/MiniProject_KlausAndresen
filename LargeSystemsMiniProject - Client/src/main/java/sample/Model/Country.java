@@ -32,11 +32,6 @@ public class Country implements Comparable<Country>, Serializable {
         this.alpha3Code = alpha3Code;
     }
 
-    public Country setId(int id) {
-        this.id = id;
-        return this;
-    }
-
     public int getId() {
         return id;
     }

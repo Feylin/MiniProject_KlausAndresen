@@ -39,9 +39,8 @@ public class Main extends Application {
             String countryAlpha3 = obj.getISO3Country();
             Currency countryCurrency = Currency.getInstance(obj);
 
-            countryMap.put(countryName, new String[]{countryAlpha2, countryAlpha3, String.valueOf(countryCurrency)});
+            countryMap.put(countryName, new String[]{ countryAlpha2, countryAlpha3, String.valueOf(countryCurrency)});
         }
-
         countryData.addAll(service.getAllCountries());
     }
 

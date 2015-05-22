@@ -15,7 +15,11 @@ public interface CountryDAO {
 
     void delete(int id);
 
+    void delete(String name);
+
     Country get(int id);
+
+    Country get(String name);
 
     List<Country> listAllCountries();
 }
