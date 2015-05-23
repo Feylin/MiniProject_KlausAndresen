@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,7 +42,7 @@ public class CountryController {
     public Country getCountry(@PathVariable("name") String name) throws RemoteException {
         Country country = service.getCountry(name);
 
-        ExecutorService executorService = Executors.newFixedThreadPool(4);
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
         Future<Country> result = executorService.submit(new FetchCountryDataThread(country));
 
         Country countryFromExecutor = null;
@@ -57,7 +56,7 @@ public class CountryController {
         if (!countryAndCurrencies.containsKey(country.getName())) {
             HashMap<String, Double> currencies = new HashMap<>();
             for (int i = 0; i < 3; i++) {
-                Pair<String, Double> currencyPair = RmiConnector.INSTANCE.rmiLookup().exchangeRate(country.getCurrency());
+                Pair<String, Double> currencyPair = RmiConnector.INSTANCE.connectToRmi().exchangeRate(country.getCurrency());
                 currencies.put(currencyPair.getKey(), currencyPair.getValue());
             }
             countryAndCurrencies.put(country.getName(), currencies);
@@ -76,10 +75,19 @@ public class CountryController {
         service.deleteCountry(name);
     }
 
-    @RequestMapping(value = "/updateCountry/country", method = RequestMethod.PUT)
-    public @ResponseBody String updateCountry(@RequestBody Country country){
-        service.saveCountry(country);
-        return "ok";
+    @RequestMapping(value = "/updateCountry/{name}", method = RequestMethod.PUT)
+    public Country updateCountry(@PathVariable("name") String name) throws RemoteException {
+        Country country = service.getCountry(name);
+        HashMap<String, Double> currenciesForCountry = countryAndCurrencies.get(name);
+
+        for (String currency : currenciesForCountry.keySet()) {
+            double exchangeRate = RmiConnector.INSTANCE.connectToRmi().exchangeRate(country.getCurrency(), currency);
+            currenciesForCountry.put(currency, exchangeRate);
+        }
+
+        country.setCurrencies(currenciesForCountry);
+
+        return country;
     }
 
     @RequestMapping(value = "/addCountry/country", method = RequestMethod.POST)

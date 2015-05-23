@@ -30,8 +30,8 @@ public class StartServer {
             System.out.println("java RMI registry already exists.");
         }
 
-        // Schedule updater every three hours
-//        setUpdaterSettings(0, 3, TimeUnit.HOURS);
+        // Schedule updater every one hour
+//        setUpdaterSettings(0, 1, TimeUnit.HOURS);
 
          // Fetch currencies from yahoo
         System.out.println("Fetching initial currencies...");

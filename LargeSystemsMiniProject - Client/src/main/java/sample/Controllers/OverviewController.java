@@ -151,14 +151,7 @@ public class OverviewController {
             service.deleteCountry(selectedCountry.getName());
             tblCountries.getItems().remove(tableIndex);
         } else {
-            // Nothing selected.
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.initOwner(mainApplication.getPrimaryStage());
-            alert.setTitle("No Selection");
-            alert.setHeaderText("No Country Selected");
-            alert.setContentText("Please select a Country in the table.");
-
-            alert.showAndWait();
+            showNoSelectionError();
         }
         tblCountries.requestFocus();
         tblCountries.getSelectionModel().select(0);
@@ -186,6 +179,24 @@ public class OverviewController {
      */
     @FXML
     private void btnUpdateClicked() {
+        Country selectedCountry = tblCountries.getSelectionModel().getSelectedItem();
+        if (selectedCountry != null) {
+            chartCurrencies.getData().clear();
+            selectedCountry.setCurrencies(service.updateCountry(selectedCountry.getName()).getCurrencies());
+            populateChart(selectedCountry);
+        } else {
+            showNoSelectionError();
+        }
+    }
 
+    private void showNoSelectionError() {
+        // Nothing selected.
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.initOwner(mainApplication.getPrimaryStage());
+        alert.setTitle("No Selection");
+        alert.setHeaderText("No Country Selected");
+        alert.setContentText("Please select a Country in the table.");
+
+        alert.showAndWait();
     }
 }

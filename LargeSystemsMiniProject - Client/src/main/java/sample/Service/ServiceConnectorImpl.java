@@ -1,9 +1,15 @@
 package sample.Service;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import sample.Model.Country;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -21,7 +27,7 @@ public enum ServiceConnectorImpl implements ServiceConnector {
     }
 
     public Country getCountry(String name) {
-        return restTemplate.getForObject(REST_SERVICE_URL + "/countries/{name}", Country.class, name);
+        return restTemplate.getForObject(REST_SERVICE_URL + "countries/{name}", Country.class, name);
     }
 
     public void saveCountry(Country country) {
@@ -32,7 +38,14 @@ public enum ServiceConnectorImpl implements ServiceConnector {
         restTemplate.delete(REST_SERVICE_URL + "deleteCountry/{name}", name);
     }
 
-    public void updateCountry(Country country) {
-        restTemplate.put(REST_SERVICE_URL + "updateCountry/country", country);
+    public Country updateCountry(String name) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<HashMap<String, Double>> entity = new HttpEntity<>(headers);
+        ResponseEntity response = restTemplate.exchange(REST_SERVICE_URL + "updateCountry/{name}", HttpMethod.PUT, entity, Country.class, name);
+
+        response.getHeaders().getLocation();
+        response.getStatusCode();
+        return (Country) response.getBody();
     }
 }

@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 public enum RmiConnector {
     INSTANCE;
 
-    public RmiServer rmiLookup() {
+    public RmiServer connectToRmi() {
         RmiServer rmiServer = null;
         try {
             // fire to localhost port 1099
