@@ -1,4 +1,6 @@
-package Server;
+package Service;
+
+import javafx.util.Pair;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -10,4 +12,6 @@ public interface RmiServer extends Remote {
     double exchangeRate(String sourceCurrency, String targetCurrency, Double amount) throws RemoteException;
 
     double exchangeRate(String sourceCurrency, String targetCurrency) throws RemoteException;
+
+    Pair<String, Double> exchangeRate(String sourceCurrency) throws RemoteException;
 }

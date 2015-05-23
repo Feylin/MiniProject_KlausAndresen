@@ -33,19 +33,6 @@ public class Application {
 //
 //        System.out.println(locales.length);
 
-//        SpringApplication.run(Application.class, args);
-
-        try {
-            // fire to localhost port 1099
-            Registry myRegistry = LocateRegistry.getRegistry(RegistryConfig.REGISTRY_PORT);
-
-            // search for myMessage service
-            RmiServer impl = (RmiServer) myRegistry.lookup(RegistryConfig.INSTANCE_NAME);
-
-            // call server's method
-            System.out.println(impl.exchangeRate("EUR", "USD"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        SpringApplication.run(Application.class, args);
     }
 }

@@ -1,4 +1,7 @@
-package Server;
+package Service;
+
+import Server.CurrencyLoader;
+import javafx.util.Pair;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,6 +11,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by prep on 20-02-2015.
@@ -15,20 +19,17 @@ import java.util.List;
 public class RmiServerImpl extends UnicastRemoteObject implements RmiServer {
     private static CurrencyLoader currencyCache = CurrencyLoader.INSTANCE;
     private static HashMap<String, Double> currencyExchange = new HashMap<>();
+    private Random rnd = new Random();
+    private static List<String> currencies;
 
     public RmiServerImpl() throws RemoteException {
         super(0);
+        currencies = currencyCache.getCurrencyList();
     }
 
-    protected static void fillCurrencyCache() {
-        String splitChar = "\\$";
-        int arrayIndex = 0;
-        List<String> currencies = currencyCache.getCurrencyList();
-
+    public static void fillCurrencyCache() {
         for (String sourceCurrency : currencies) {
             for (String targetCurrency : currencies) {
-//                String splitSourceCurr = sourceCurrency.split(splitChar)[arrayIndex].trim();
-//                String splitTargetCurr = targetCurrency.split(splitChar)[arrayIndex].trim();
                 String appendedCurrency = sourceCurrency + targetCurrency;
 
                 Double value = fetchSingleCurrency(appendedCurrency);
@@ -69,5 +70,11 @@ public class RmiServerImpl extends UnicastRemoteObject implements RmiServer {
     @Override
     public double exchangeRate(String sourceCurrency, String targetCurrency) {
         return exchangeRate(sourceCurrency, targetCurrency, 1d);
+    }
+
+    @Override
+    public Pair<String, Double> exchangeRate(String sourceCurrency) {
+        String targetCurrency = currencies.get(rnd.nextInt(currencies.size()));
+        return new Pair<>(targetCurrency, exchangeRate(sourceCurrency, targetCurrency));
     }
 }

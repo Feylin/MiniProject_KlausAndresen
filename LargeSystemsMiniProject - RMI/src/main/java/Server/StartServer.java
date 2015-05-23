@@ -1,5 +1,6 @@
 package Server;
 
+import Service.RmiServerImpl;
 import Shared.RegistryConfig;
 
 import java.rmi.RemoteException;
@@ -29,8 +30,8 @@ public class StartServer {
             System.out.println("java RMI registry already exists.");
         }
 
-        // Schedule updater every half hour
-        setUpdaterSettings(0, 30, TimeUnit.MINUTES);
+        // Schedule updater every three hours
+//        setUpdaterSettings(0, 3, TimeUnit.HOURS);
 
          // Fetch currencies from yahoo
         System.out.println("Fetching initial currencies...");

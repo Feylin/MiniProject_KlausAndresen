@@ -3,6 +3,8 @@ package Controllers;
 import Model.Country;
 import Runnables.FetchCountryDataThread;
 import Service.CountryService;
+import Service.RmiConnector;
+import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.rmi.RemoteException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -26,8 +30,9 @@ import java.util.concurrent.Future;
 public class CountryController {
     @Autowired
     CountryService service;
-    JSONCountryDescription descriptionApi = JSONCountryDescription.INSTANCE;
-//    JSONRestCountries restCountriesApi = JSONRestCountries.INSTANCE;
+    private JSONCountryDescription descriptionApi = JSONCountryDescription.INSTANCE;
+    private HashMap<String, HashMap<String, Double>> countryAndCurrencies = new HashMap<>();
+//    private JSONRestCountries restCountriesApi = JSONRestCountries.INSTANCE;
 
     @RequestMapping(value = "/countries", method = RequestMethod.GET)
     private List<Country> getAllCountries() {
@@ -35,7 +40,7 @@ public class CountryController {
     }
 
     @RequestMapping(value = "/countries/{name}", method = RequestMethod.GET)
-    public Country getCountry(@PathVariable("name") String name) {
+    public Country getCountry(@PathVariable("name") String name) throws RemoteException {
         Country country = service.getCountry(name);
 
         ExecutorService executorService = Executors.newFixedThreadPool(4);
@@ -48,6 +53,18 @@ public class CountryController {
             result.cancel(true);
         }
         executorService.shutdown();
+
+        if (!countryAndCurrencies.containsKey(country.getName())) {
+            HashMap<String, Double> currencies = new HashMap<>();
+            for (int i = 0; i < 3; i++) {
+                Pair<String, Double> currencyPair = RmiConnector.INSTANCE.rmiLookup().exchangeRate(country.getCurrency());
+                currencies.put(currencyPair.getKey(), currencyPair.getValue());
+            }
+            countryAndCurrencies.put(country.getName(), currencies);
+            country.setCurrencies(countryAndCurrencies.get(country.getName()));
+        }
+        if (country.getCurrencies() == null)
+            country.setCurrencies(countryAndCurrencies.get(country.getName()));
 
         return countryFromExecutor.setDescription(descriptionApi.getDescription(country))
                .setImage("http://www.geonames.org/flags/x/" + country.getAlpha2Code().toLowerCase() + ".gif");

@@ -4,6 +4,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -11,12 +13,15 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.util.Pair;
 import sample.Main;
 import sample.Model.Country;
 import sample.Service.ServiceConnector;
 import sample.Service.ServiceConnectorImpl;
 
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 public class OverviewController {
     @FXML private TextArea txtDescription;
@@ -32,6 +37,7 @@ public class OverviewController {
     @FXML private Label lblAlpha3;
     @FXML private Label lblTimezone;
     @FXML private ImageView countryImg;
+    @FXML private BarChart chartCurrencies;
     private ServiceConnector service = ServiceConnectorImpl.INSTANCE;
     private StringProperty nameProperty = new SimpleStringProperty();
     private StringProperty currencyProperty = new SimpleStringProperty();
@@ -84,6 +90,20 @@ public class OverviewController {
                 });
     }
 
+    private void populateChart(Country country) {
+        chartCurrencies.getXAxis().setLabel("Currencies");
+
+        chartCurrencies.getYAxis().setLabel("X per 1 " + country.getCurrency());
+        chartCurrencies.getData().clear();
+        XYChart.Series series = new XYChart.Series();
+
+        for (Map.Entry<String, Double> entry : country.getCurrencies().entrySet()) {
+            series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
+        }
+
+        chartCurrencies.getData().addAll(series);
+    }
+
     private void showCountryDetails(Country country) {
         if (country != null) {
             // Fill the labels with info from the champion object.
@@ -97,6 +117,7 @@ public class OverviewController {
             lblTimezone.setText(country.getTimezone());
             txtDescription.setText(country.getDescription());
             countryImg.setImage(new Image(country.getImage()));
+            populateChart(country);
         } else {
             // Country is null, remove all the text.
             lblName.setText("");
@@ -109,6 +130,7 @@ public class OverviewController {
             lblTimezone.setText("");
             txtDescription.setText("");
             countryImg.setImage(null);
+            chartCurrencies.getData().clear();
         }
     }
 
@@ -159,11 +181,11 @@ public class OverviewController {
     }
 
     /**
-     * Called when the user clicks the edit button.
+     * Called when the user clicks the update button.
      * Opens a dialog to edit details for the selected country.
      */
     @FXML
-    private void btnEditClicked() {
+    private void btnUpdateClicked() {
 
     }
 }

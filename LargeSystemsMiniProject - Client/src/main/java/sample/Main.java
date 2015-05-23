@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.springframework.web.client.ResourceAccessException;
 import sample.Controllers.CountryEditDialogController;
 import sample.Controllers.OverviewController;
 import sample.Model.Country;
@@ -42,7 +43,9 @@ public class Main extends Application {
             countryMap.put(countryName, new String[]{ countryAlpha2, countryAlpha3, String.valueOf(countryCurrency)});
         }
         countryMap.remove("Antarctica"); // no currency and or rest data
-        countryData.addAll(service.getAllCountries());
+        try {
+            countryData.addAll(service.getAllCountries());
+        } catch (ResourceAccessException ignored) {}
     }
 
     @Override

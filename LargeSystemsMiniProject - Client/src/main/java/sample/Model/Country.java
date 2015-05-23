@@ -3,6 +3,7 @@ package sample.Model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 /**
  * Created by Administrator on 19-05-2015.
@@ -20,6 +21,7 @@ public class Country implements Comparable<Country>, Serializable {
     private String population;
     private String timezone;
     private String image;
+    private HashMap<String, Double> currencies;
 
     public Country() {
 
@@ -123,6 +125,15 @@ public class Country implements Comparable<Country>, Serializable {
 
     public Country setImage(String image) {
         this.image = image;
+        return this;
+    }
+
+    public HashMap<String, Double> getCurrencies() {
+        return currencies;
+    }
+
+    public Country setCurrencies(HashMap<String, Double> currencies) {
+        this.currencies = currencies;
         return this;
     }
 

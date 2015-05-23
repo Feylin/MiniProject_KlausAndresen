@@ -2,18 +2,8 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java/RMI/CurrencyLoader.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/src/main/java/RMI/CurrencyUpdater.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/src/main/java/RMI/ExchangeRateTask.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/src/main/java/RMI/RmiServer.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/src/main/java/RMI/RmiServerImpl.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/src/main/java/RMI/UpdaterObject.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/src/main/java/Server/RmiServer.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/src/main/java/Service/RmiServer.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/src/main/java/Shared/RegistryConfig.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/src/main/java/Shared/RegistryConfig.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/src/main/java/Shared/ServerConfig.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/src/main/java/Shared/ServerConfig.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/src/main/resources/Currency" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/src/main/resources/application.properties" charset="windows-1252" />
   </component>
 </project>
