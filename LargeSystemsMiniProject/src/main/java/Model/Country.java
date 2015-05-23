@@ -1,13 +1,24 @@
 package Model;
 
-import javax.persistence.*;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
+import java.util.HashMap;
 
 /**
  * Created by Administrator on 17-05-2015.
  */
 @Entity
 @Table(name = "Countries")
+@JsonSerialize(include = Inclusion.NON_NULL)
 public class Country implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +40,8 @@ public class Country implements Serializable {
     private String population;
     @Transient
     private String image;
+    @Transient
+    private HashMap<String, Double> currencies; // Add cache for the countries in the list
 
     public Country() {
 
@@ -131,6 +144,15 @@ public class Country implements Serializable {
 
     public Country setImage(String image) {
         this.image = image;
+        return this;
+    }
+
+    public HashMap<String, Double> getCurrencies() {
+        return currencies;
+    }
+
+    public Country setCurrencies(HashMap<String, Double> currencies) {
+        this.currencies = currencies;
         return this;
     }
 }

@@ -41,6 +41,7 @@ public class Main extends Application {
 
             countryMap.put(countryName, new String[]{ countryAlpha2, countryAlpha3, String.valueOf(countryCurrency)});
         }
+        countryMap.remove("Antarctica"); // no currency and or rest data
         countryData.addAll(service.getAllCountries());
     }
 
@@ -76,7 +77,7 @@ public class Main extends Application {
      * @param country the champion object to be edited.
      * @return true is the user clicked OK, false otherwise.
      */
-    public boolean showChampionEditDialog(Country country) {
+    public boolean showCountryEditDialog(Country country) {
         try {
             // Load the fxml file and create a new stage for the popup dialog.
             FXMLLoader loader = new FXMLLoader();

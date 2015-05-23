@@ -16,6 +16,8 @@ import sample.Model.Country;
 import sample.Service.ServiceConnector;
 import sample.Service.ServiceConnectorImpl;
 
+import java.text.DecimalFormat;
+
 public class OverviewController {
     @FXML private TextArea txtDescription;
     @FXML private TableView<Country> tblCountries;
@@ -90,7 +92,7 @@ public class OverviewController {
             lblAlpha3.setText(country.getAlpha3Code());
             lblCapital.setText(country.getCapital());
             lblCurrency.setText(country.getCurrency());
-            lblPopulation.setText(country.getPopulation());
+            lblPopulation.setText(thousandSeparator(country.getPopulation()));
             lblRegion.setText(country.getRegion());
             lblTimezone.setText(country.getTimezone());
             txtDescription.setText(country.getDescription());
@@ -108,6 +110,12 @@ public class OverviewController {
             txtDescription.setText("");
             countryImg.setImage(null);
         }
+    }
+
+    private String thousandSeparator(String source) {
+        int value = Integer.valueOf(source);
+        DecimalFormat myFormatter = new DecimalFormat("#,###");
+        return myFormatter.format(value);
     }
 
     /**
@@ -142,7 +150,7 @@ public class OverviewController {
     @FXML
     private void btnNewClicked() {
         Country tempCountry = new Country();
-        boolean okClicked = mainApplication.showChampionEditDialog(tempCountry);
+        boolean okClicked = mainApplication.showCountryEditDialog(tempCountry);
         if (okClicked) {
             service.saveCountry(tempCountry);
             mainApplication.getCountryData().add(tempCountry);

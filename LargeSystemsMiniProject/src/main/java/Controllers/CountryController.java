@@ -1,6 +1,7 @@
 package Controllers;
 
 import Model.Country;
+import Runnables.FetchCountryDataThread;
 import Service.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,8 +14,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Created by Administrator on 17-05-2015.
@@ -24,7 +27,7 @@ public class CountryController {
     @Autowired
     CountryService service;
     JSONCountryDescription descriptionApi = JSONCountryDescription.INSTANCE;
-    JSONRestCountries restCountriesApi = JSONRestCountries.INSTANCE;
+//    JSONRestCountries restCountriesApi = JSONRestCountries.INSTANCE;
 
     @RequestMapping(value = "/countries", method = RequestMethod.GET)
     private List<Country> getAllCountries() {
@@ -34,13 +37,20 @@ public class CountryController {
     @RequestMapping(value = "/countries/{name}", method = RequestMethod.GET)
     public Country getCountry(@PathVariable("name") String name) {
         Country country = service.getCountry(name);
-        HashMap<String, String> attributes = restCountriesApi.getCountryAttributes(country);
-        return country.setDescription(descriptionApi.getDescription(country))
-                .setCapital(attributes.get("capital"))
-                .setPopulation(attributes.get("population"))
-                .setRegion(attributes.get("region"))
-                .setTimezone(attributes.get("timezone"))
-                .setImage("http://www.geonames.org/flags/x/" + country.getAlpha2Code().toLowerCase() + ".gif");
+
+        ExecutorService executorService = Executors.newFixedThreadPool(4);
+        Future<Country> result = executorService.submit(new FetchCountryDataThread(country));
+
+        Country countryFromExecutor = null;
+        try {
+            countryFromExecutor = result.get();
+        } catch (Exception e) {
+            result.cancel(true);
+        }
+        executorService.shutdown();
+
+        return countryFromExecutor.setDescription(descriptionApi.getDescription(country))
+               .setImage("http://www.geonames.org/flags/x/" + country.getAlpha2Code().toLowerCase() + ".gif");
     }
 
     @RequestMapping(value = "deleteCountry/{name}", method = RequestMethod.DELETE)
