@@ -13,14 +13,12 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.util.Pair;
 import sample.Main;
 import sample.Model.Country;
 import sample.Service.ServiceConnector;
 import sample.Service.ServiceConnectorImpl;
 
 import java.text.DecimalFormat;
-import java.util.HashMap;
 import java.util.Map;
 
 public class OverviewController {

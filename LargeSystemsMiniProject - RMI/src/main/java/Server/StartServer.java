@@ -1,5 +1,7 @@
 package Server;
 
+import Model.UpdaterObject;
+import Runnables.CurrencyUpdater;
 import Service.RmiServerImpl;
 import Shared.RegistryConfig;
 
@@ -30,8 +32,8 @@ public class StartServer {
             System.out.println("java RMI registry already exists.");
         }
 
-        // Schedule updater every one hour
-//        setUpdaterSettings(0, 1, TimeUnit.HOURS);
+        // Schedule updater every ninety minutes, starting now
+        setUpdaterSettings(0, 90, TimeUnit.MINUTES);
 
          // Fetch currencies from yahoo
         System.out.println("Fetching initial currencies...");

@@ -1,4 +1,4 @@
-package Server;
+package Runnables;
 
 import Service.RmiServerImpl;
 
@@ -19,9 +19,8 @@ public class FetchCurrencyThread implements Callable<HashMap<String, Double>> {
 
     @Override
     public HashMap<String, Double> call() throws Exception {
-        for (String currency : currencies) {
+        for (String currency : currencies)
             currencyAndValues.put(currency, RmiServerImpl.fetchSingleCurrency(currency));
-        }
         return currencyAndValues;
     }
 }

@@ -1,7 +1,6 @@
 package Service;
 
-import Server.CurrencyLoader;
-import Server.FetchCurrencyThread;
+import Runnables.FetchCurrencyThread;
 import com.google.common.collect.Lists;
 import com.google.common.math.IntMath;
 import javafx.util.Pair;

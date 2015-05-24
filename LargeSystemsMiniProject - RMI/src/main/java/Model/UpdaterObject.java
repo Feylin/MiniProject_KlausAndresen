@@ -1,4 +1,4 @@
-package Server;
+package Model;
 
 import java.io.Serializable;
 import java.util.concurrent.TimeUnit;

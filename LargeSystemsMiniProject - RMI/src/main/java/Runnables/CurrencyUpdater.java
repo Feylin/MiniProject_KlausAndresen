@@ -1,4 +1,4 @@
-package Server;
+package Runnables;
 
 import Service.RmiServerImpl;
 

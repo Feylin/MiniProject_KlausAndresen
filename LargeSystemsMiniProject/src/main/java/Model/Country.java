@@ -41,7 +41,7 @@ public class Country implements Serializable {
     @Transient
     private String image;
     @Transient
-    private HashMap<String, Double> currencies; // Add cache for the countries in the list
+    private HashMap<String, Double> currencies;
 
     public Country() {
 
