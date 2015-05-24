@@ -23,6 +23,7 @@ public class FetchCountryDataThread implements Callable<Country> {
         return country.setCapital(attributes.get("capital"))
                 .setPopulation(attributes.get("population"))
                 .setRegion(attributes.get("region"))
-                .setTimezone(attributes.get("timezone"));
+                .setTimezone(attributes.get("timezone"))
+                .setLatlng(attributes.get("latlng"));
     }
 }

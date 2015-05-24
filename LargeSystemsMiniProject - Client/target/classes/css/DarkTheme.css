@@ -65,8 +65,9 @@
     -fx-background-color: #ff9446;
 }
 
-.table-view:focused .table-row-cell:focused:filled {
+.table-view .table-row-cell:focused:filled {
     -fx-border-color: #ff9446;
+    -fx-background-color: #ff9446;
 }
 
 .split-pane:horizontal > .split-pane-divider {
@@ -194,3 +195,13 @@
     -fx-stroke: transparent;
     -fx-stroke-width: 0;
 }
+
+.hyperlink {
+    -fx-font-size: 11pt;
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-text-fill: #ff9446;
+}
+
+/*.hyperlink:visited {*/
+    /*-fx-text-fill: gray;*/
+/*}*/

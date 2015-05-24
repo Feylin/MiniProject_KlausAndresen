@@ -42,6 +42,8 @@ public class Country implements Serializable {
     private String image;
     @Transient
     private HashMap<String, Double> currencies;
+    @Transient
+    private String latlng;
 
     public Country() {
 
@@ -153,6 +155,15 @@ public class Country implements Serializable {
 
     public Country setCurrencies(HashMap<String, Double> currencies) {
         this.currencies = currencies;
+        return this;
+    }
+
+    public String getLatlng() {
+        return latlng;
+    }
+
+    public Country setLatlng(String latlng) {
+        this.latlng = latlng;
         return this;
     }
 }

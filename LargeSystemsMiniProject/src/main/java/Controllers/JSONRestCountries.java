@@ -44,6 +44,7 @@ public enum JSONRestCountries {
             attributes.put("population", rootObj.get(firstObject).getAsJsonObject().get("population").getAsString());
             attributes.put("capital", rootObj.get(firstObject).getAsJsonObject().get("capital").getAsString());
             attributes.put("region", rootObj.get(firstObject).getAsJsonObject().get("region").getAsString());
+            attributes.put("latlng", rootObj.get(firstObject).getAsJsonObject().get("latlng").getAsJsonArray().toString());
             JsonArray timezones = rootObj.get(firstObject).getAsJsonObject().get("timezones").getAsJsonArray();
             attributes.put("timezone", timezones.get(timezones.size() - 1).getAsString());
 

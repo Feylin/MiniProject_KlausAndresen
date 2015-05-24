@@ -97,7 +97,9 @@ public class RmiServerImpl extends UnicastRemoteObject implements RmiServer {
 
     @Override
     public double exchangeRate(String sourceCurrency, String targetCurrency) {
-        return exchangeRate(sourceCurrency, targetCurrency, 1d);
+//        return exchangeRate(sourceCurrency, targetCurrency, 1d);
+        String appendedCurrency = sourceCurrency + targetCurrency;
+        return fetchSingleCurrency(appendedCurrency);
     }
 
     @Override

@@ -4,6 +4,7 @@ import Model.Country;
 import Runnables.FetchCountryDataThread;
 import Service.CountryService;
 import Service.RmiConnector;
+import Service.RmiServer;
 import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -56,7 +57,7 @@ public class CountryController {
         if (!countryAndCurrencies.containsKey(country.getName())) {
             HashMap<String, Double> currencies = new HashMap<>();
             for (int i = 0; i < 3; i++) {
-                Pair<String, Double> currencyPair = RmiConnector.INSTANCE.connectToRmi().exchangeRate(country.getCurrency());
+                Pair<String, Double> currencyPair = RmiConnector.INSTANCE.getRmiServer().exchangeRate(country.getCurrency());
                 currencies.put(currencyPair.getKey(), currencyPair.getValue());
             }
             countryAndCurrencies.put(country.getName(), currencies);
@@ -81,7 +82,7 @@ public class CountryController {
         HashMap<String, Double> currenciesForCountry = countryAndCurrencies.get(name);
 
         for (String currency : currenciesForCountry.keySet()) {
-            double exchangeRate = RmiConnector.INSTANCE.connectToRmi().exchangeRate(country.getCurrency(), currency);
+            double exchangeRate = RmiConnector.INSTANCE.getRmiServer().exchangeRate(country.getCurrency(), currency);
             currenciesForCountry.put(currency, exchangeRate);
         }
 

@@ -13,17 +13,27 @@ import java.util.logging.Logger;
 public enum RmiConnector {
     INSTANCE;
 
-    public RmiServer connectToRmi() {
+    private RmiServer rmiServer;
+
+    RmiConnector() {
+        rmiServer = connectToRmi();
+    }
+
+    private RmiServer connectToRmi() {
         RmiServer rmiServer = null;
         try {
             // fire to localhost port 1099
             Registry myRegistry = LocateRegistry.getRegistry(RegistryConfig.REGISTRY_PORT);
 
-            // search for myMessage service
+            // search for serverImpl service
             rmiServer = (RmiServer) myRegistry.lookup(RegistryConfig.INSTANCE_NAME);
         } catch (Exception e) {
             Logger.getLogger(this.getClass().getSimpleName()).log(Level.SEVERE, e.getMessage(), e);
         }
+        return rmiServer;
+    }
+
+    public RmiServer getRmiServer() {
         return rmiServer;
     }
 }

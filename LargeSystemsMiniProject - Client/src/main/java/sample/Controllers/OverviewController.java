@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -36,9 +37,11 @@ public class OverviewController {
     @FXML private Label lblTimezone;
     @FXML private ImageView countryImg;
     @FXML private BarChart chartCurrencies;
+    @FXML private Hyperlink lnkLocation;
     private ServiceConnector service = ServiceConnectorImpl.INSTANCE;
     private StringProperty nameProperty = new SimpleStringProperty();
     private StringProperty currencyProperty = new SimpleStringProperty();
+    private String countryLocation;
 
     private Main mainApplication;
 
@@ -67,7 +70,7 @@ public class OverviewController {
      */
     @FXML
     private void initialize() {
-        // Initialize the champion table with the two columns.
+        // Initialize the country table with the two columns.
         tblNameColumn.setCellValueFactory(cellData -> {
             nameProperty.setValue(cellData.getValue().getName());
             return nameProperty;
@@ -100,6 +103,7 @@ public class OverviewController {
         }
 
         chartCurrencies.getData().addAll(series);
+        System.out.println(country.getCurrencies());
     }
 
     private void showCountryDetails(Country country) {
@@ -116,6 +120,8 @@ public class OverviewController {
             txtDescription.setText(country.getDescription());
             countryImg.setImage(new Image(country.getImage()));
             populateChart(country);
+            countryLocation = country.getLatlng();
+            lnkLocation.setText("Show Map");
         } else {
             // Country is null, remove all the text.
             lblName.setText("");
@@ -129,6 +135,7 @@ public class OverviewController {
             txtDescription.setText("");
             countryImg.setImage(null);
             chartCurrencies.getData().clear();
+            lnkLocation.setText("");
         }
     }
 
@@ -182,6 +189,16 @@ public class OverviewController {
             chartCurrencies.getData().clear();
             selectedCountry.setCurrencies(service.updateCountry(selectedCountry.getName()).getCurrencies());
             populateChart(selectedCountry);
+        } else {
+            showNoSelectionError();
+        }
+    }
+
+    @FXML
+    private void lnkCountryLocationClickec() {
+        Country selectedCountry = tblCountries.getSelectionModel().getSelectedItem();
+        if (selectedCountry != null) {
+            mainApplication.showMapDialog(countryLocation);
         } else {
             showNoSelectionError();
         }

@@ -21,7 +21,7 @@ public class StartServer {
     private static UpdaterObject updaterSettings = new UpdaterObject();
 
     public static void main(String args[]) throws Exception {
-        System.out.println("RMI server started");
+        System.out.println("RMI server started.");
 
         try { //special exception handler for registry creation
             Registry registry = LocateRegistry.createRegistry(RegistryConfig.REGISTRY_PORT);
@@ -33,12 +33,12 @@ public class StartServer {
         }
 
         // Schedule updater every ninety minutes, starting now
-        setUpdaterSettings(0, 90, TimeUnit.MINUTES);
+//        setUpdaterSettings(0, 90, TimeUnit.MINUTES);
 
          // Fetch currencies from yahoo
         System.out.println("Fetching initial currencies...");
         RmiServerImpl.fillCurrencyCache();
-        System.out.println("All currencies are up to date");
+        System.out.println("All currencies are up to date.");
     }
 
     private static void setUpdaterSettings(int delay, int period, TimeUnit timeUnit) {
@@ -50,7 +50,7 @@ public class StartServer {
     }
 
     private static void scheduleUpdate(UpdaterObject updaterSettings) {
-        System.out.println("Updater scheduled to run every " + updaterSettings.getPeriod() + " " + updaterSettings.getTimeUnit().toString().toLowerCase());
+        System.out.println("Automatic update scheduled to run every " + updaterSettings.getPeriod() + " " + updaterSettings.getTimeUnit().toString().toLowerCase() +".");
         scheduler.scheduleAtFixedRate(updater, updaterSettings.getDelay(), updaterSettings.getPeriod(), updaterSettings.getTimeUnit());
     }
 }

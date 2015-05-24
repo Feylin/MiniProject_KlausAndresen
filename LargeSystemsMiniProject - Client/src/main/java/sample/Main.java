@@ -10,6 +10,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.web.client.ResourceAccessException;
 import sample.Controllers.CountryEditDialogController;
+import sample.Controllers.MapDialogController;
 import sample.Controllers.OverviewController;
 import sample.Model.Country;
 import sample.Service.ServiceConnector;
@@ -69,6 +70,31 @@ public class Main extends Application {
             controller.setMainApplication(this);
 
             primaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void showMapDialog(String countryLocation) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/fxml/MapDialog.fxml"));
+            AnchorPane page = loader.load();
+
+            // Create the dialog Stage.
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Map");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+
+            MapDialogController controller = loader.getController();
+            dialogStage.setScene(new Scene(controller.getMapView()));
+            controller.setMainApplication(this);
+            controller.setDialogStage(dialogStage);
+            controller.setCountry(countryLocation);
+
+            // Show the dialog and wait until the user closes it.
+            dialogStage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
         }
