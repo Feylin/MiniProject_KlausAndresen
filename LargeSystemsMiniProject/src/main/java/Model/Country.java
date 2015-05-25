@@ -2,6 +2,7 @@ package Model;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,8 +26,14 @@ public class Country implements Serializable {
     private int id;
     @Column(unique = true, nullable = false)
     private String name;
+    @Column(length = 3)
+    @Length(max = 3)
     private String currency;
+    @Column(length = 2)
+    @Length(max = 2)
     private String alpha2Code;
+    @Column(length = 3)
+    @Length(max = 3)
     private String alpha3Code;
     @Transient
     private String description;

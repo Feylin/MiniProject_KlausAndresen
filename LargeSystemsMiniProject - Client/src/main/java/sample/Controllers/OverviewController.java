@@ -41,7 +41,6 @@ public class OverviewController {
     private ServiceConnector service = ServiceConnectorImpl.INSTANCE;
     private StringProperty nameProperty = new SimpleStringProperty();
     private StringProperty currencyProperty = new SimpleStringProperty();
-    private String countryLocation;
 
     private Main mainApplication;
 
@@ -98,9 +97,8 @@ public class OverviewController {
         chartCurrencies.getData().clear();
         XYChart.Series series = new XYChart.Series();
 
-        for (Map.Entry<String, Double> entry : country.getCurrencies().entrySet()) {
+        for (Map.Entry<String, Double> entry : country.getCurrencies().entrySet())
             series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
-        }
 
         chartCurrencies.getData().addAll(series);
         System.out.println(country.getCurrencies());
@@ -120,8 +118,7 @@ public class OverviewController {
             txtDescription.setText(country.getDescription());
             countryImg.setImage(new Image(country.getImage()));
             populateChart(country);
-            countryLocation = country.getLatlng();
-            lnkLocation.setText("Show Map");
+            lnkLocation.setText(country.getLatlng().replace("[", "").replace("]", ""));
         } else {
             // Country is null, remove all the text.
             lblName.setText("");
@@ -198,7 +195,7 @@ public class OverviewController {
     private void lnkCountryLocationClickec() {
         Country selectedCountry = tblCountries.getSelectionModel().getSelectedItem();
         if (selectedCountry != null) {
-            mainApplication.showMapDialog(countryLocation);
+            mainApplication.showMapDialog(lnkLocation.getText());
         } else {
             showNoSelectionError();
         }

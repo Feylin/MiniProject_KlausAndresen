@@ -26,8 +26,9 @@ public class Main extends Application {
     private ServiceConnector service = ServiceConnectorImpl.INSTANCE;
     private Stage primaryStage;
     private HashMap<String, String[]> countryMap = new HashMap<>();
+
     /**
-     * The data as an observable list of champions.
+     * The data as an observable list of countries.
      */
     private ObservableList<Country> countryData = FXCollections.observableArrayList();
 

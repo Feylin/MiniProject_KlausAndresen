@@ -55,11 +55,13 @@ public class MapDialogController implements MapComponentInitializedListener {
 
     @Override
     public void mapInitialized() {
-        List<String> locationList = Arrays.asList(countryLocation.replace("[", "").replace("]", "").split(","));
+        List<String> locationList = Arrays.asList(countryLocation.split(","));
+        Double latitude = Double.valueOf(locationList.get(0));
+        Double longitude = Double.valueOf(locationList.get(1));
         //Set the initial properties of the map.
         MapOptions mapOptions = new MapOptions();
 
-        mapOptions.center(new LatLong(Double.valueOf(locationList.get(0)), Double.valueOf(locationList.get(1))))
+        mapOptions.center(new LatLong(latitude, longitude))
                 .mapType(MapTypeIdEnum.ROADMAP)
                 .overviewMapControl(false)
                 .panControl(false)
@@ -74,7 +76,7 @@ public class MapDialogController implements MapComponentInitializedListener {
         //Add a marker to the map
         MarkerOptions markerOptions = new MarkerOptions();
 
-        markerOptions.position( new LatLong(Double.valueOf(locationList.get(0)), Double.valueOf(locationList.get(1))) )
+        markerOptions.position( new LatLong(latitude, longitude) )
                 .visible(Boolean.TRUE)
                 .title("My Marker");
 
