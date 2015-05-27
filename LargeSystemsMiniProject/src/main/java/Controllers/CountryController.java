@@ -90,6 +90,7 @@ public class CountryController {
                 double exchangeRate = rmiConnector.getRmiServer().exchangeRate(country.getCurrency(), currency);
                 currenciesForCountry.put(currency, exchangeRate);
             }
+            countryAndCurrencies.put(country.getName(), currenciesForCountry);
 
             country.setCurrencies(currenciesForCountry);
         }

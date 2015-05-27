@@ -16,23 +16,8 @@ public class CountryDAOImpl implements CountryDAO {
     @Resource
     private SessionFactory sessionFactory;
 
-    public void delete(Country country) {
-        getCurrentSession().delete(country);
-    }
-
-    public void delete(int id) {
-        Country country = (Country) getCurrentSession().load(Country.class, id);
-        getCurrentSession().delete(country);
-    }
-
     public void delete(String name) {
         getCurrentSession().delete(get(name));
-    }
-
-    public Country get(int id) {
-        return (Country) getCurrentSession().createCriteria(Country.class).
-                add(Restrictions.eq("id", id)).
-                uniqueResult();
     }
 
     public Country get(String name) {

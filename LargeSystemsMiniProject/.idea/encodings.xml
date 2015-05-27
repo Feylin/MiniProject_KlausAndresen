@@ -4,7 +4,6 @@
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java/Service/RmiServer.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/src/main/java/Shared/RegistryConfig.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/src/main/java/Shared/ServerConfig.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/src/main/resources/application.properties" charset="windows-1252" />
   </component>
 </project>
