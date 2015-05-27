@@ -91,22 +91,23 @@ public class OverviewController {
     }
 
     private void populateChart(Country country) {
-        chartCurrencies.getXAxis().setLabel("Currencies");
+        if (country.getCurrencies() != null) {
+            chartCurrencies.getXAxis().setLabel("Currencies");
 
-        chartCurrencies.getYAxis().setLabel("X per 1 " + country.getCurrency());
-        chartCurrencies.getData().clear();
-        XYChart.Series series = new XYChart.Series();
+            chartCurrencies.getYAxis().setLabel("X per 1 " + country.getCurrency());
+            chartCurrencies.getData().clear();
+            XYChart.Series series = new XYChart.Series();
 
-        for (Map.Entry<String, Double> entry : country.getCurrencies().entrySet())
-            series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
+            for (Map.Entry<String, Double> entry : country.getCurrencies().entrySet())
+                series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
 
-        chartCurrencies.getData().addAll(series);
-        System.out.println(country.getCurrencies());
+            chartCurrencies.getData().addAll(series);
+        }
     }
 
     private void showCountryDetails(Country country) {
         if (country != null) {
-            // Fill the labels with info from the champion object.
+            // Fill the labels with info from the country object.
             lblName.setText(country.getName());
             lblAlpha2.setText(country.getAlpha2Code());
             lblAlpha3.setText(country.getAlpha3Code());

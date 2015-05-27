@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -24,6 +25,7 @@ import java.util.concurrent.Future;
  * Created by prep on 20-02-2015.
  */
 public class RmiServerImpl extends UnicastRemoteObject implements RmiServer {
+    private static int numberOfCores = Runtime.getRuntime().availableProcessors();
     private static CurrencyLoader currencyCache = CurrencyLoader.INSTANCE;
     private static HashMap<String, Double> currencyExchange = new HashMap<>();
     private Random rnd = new Random();
@@ -46,23 +48,33 @@ public class RmiServerImpl extends UnicastRemoteObject implements RmiServer {
             }
         }
 
-        int partitionSize = IntMath.divide(appendedCurrencies.size(), 3, RoundingMode.UP);
+        int partitionSize = IntMath.divide(appendedCurrencies.size(), numberOfCores, RoundingMode.UP);
         List<List<String>> partitions = Lists.partition(appendedCurrencies, partitionSize);
 
-        ExecutorService executorService = Executors.newFixedThreadPool(4);
-        Future<HashMap<String, Double>> result1 = executorService.submit(new FetchCurrencyThread(partitions.get(0)));
-        Future<HashMap<String, Double>> result2 = executorService.submit(new FetchCurrencyThread(partitions.get(1)));
-        Future<HashMap<String, Double>> result3 = executorService.submit(new FetchCurrencyThread(partitions.get(2)));
+        ExecutorService executorService = Executors.newFixedThreadPool(numberOfCores);
 
-        try {
-            currencyExchange.putAll(result1.get());
-            currencyExchange.putAll(result2.get());
-            currencyExchange.putAll(result3.get());
-        } catch (Exception e) {
-            result1.cancel(true);
-            result2.cancel(true);
-            result3.cancel(true);
+        for (List<String> partition : partitions) {
+            Future<HashMap<String, Double>> result = executorService.submit(new FetchCurrencyThread(partition));
+            try {
+                currencyExchange.putAll(result.get());
+            } catch (Exception e) {
+                result.cancel(true);
+            }
         }
+
+//        Future<HashMap<String, Double>> result1 = executorService.submit(new FetchCurrencyThread(partitions.get(0)));
+//        Future<HashMap<String, Double>> result2 = executorService.submit(new FetchCurrencyThread(partitions.get(1)));
+//        Future<HashMap<String, Double>> result3 = executorService.submit(new FetchCurrencyThread(partitions.get(2)));
+
+//        try {
+//            currencyExchange.putAll(result1.get());
+//            currencyExchange.putAll(result2.get());
+//            currencyExchange.putAll(result3.get());
+//        } catch (Exception e) {
+//            result1.cancel(true);
+//            result2.cancel(true);
+//            result3.cancel(true);
+//        }
         executorService.shutdown();
     }
 
@@ -99,12 +111,15 @@ public class RmiServerImpl extends UnicastRemoteObject implements RmiServer {
     public double exchangeRate(String sourceCurrency, String targetCurrency) {
 //        return exchangeRate(sourceCurrency, targetCurrency, 1d);
         String appendedCurrency = sourceCurrency + targetCurrency;
-        return fetchSingleCurrency(appendedCurrency);
+        double currencyValue = fetchSingleCurrency(appendedCurrency);
+        if (currencyValue != currencyExchange.get(appendedCurrency))
+            currencyExchange.put(appendedCurrency, currencyValue);
+        return currencyValue;
     }
 
     @Override
     public Pair<String, Double> exchangeRate(String sourceCurrency) {
         String targetCurrency = currencies.get(rnd.nextInt(currencies.size()));
-        return new Pair<>(targetCurrency, exchangeRate(sourceCurrency, targetCurrency));
+        return new Pair<>(targetCurrency, exchangeRate(sourceCurrency, targetCurrency, 1d));
     }
 }

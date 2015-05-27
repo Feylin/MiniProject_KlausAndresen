@@ -103,8 +103,8 @@ public class Main extends Application {
 
     /**
      * Opens a dialog to edit details for the specified country.
-     * If the user clicks OK, the changes are saved into the provided champion object and true is returned.
-     * @param country the champion object to be edited.
+     * If the user clicks OK, the changes are saved into the provided country object and true is returned.
+     * @param country the country object to be edited.
      * @return true is the user clicked OK, false otherwise.
      */
     public boolean showCountryEditDialog(Country country) {

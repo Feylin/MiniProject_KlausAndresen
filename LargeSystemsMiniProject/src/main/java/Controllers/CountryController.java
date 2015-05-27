@@ -31,6 +31,7 @@ public class CountryController {
     @Autowired
     CountryService service;
     private JSONCountryDescription descriptionApi = JSONCountryDescription.INSTANCE;
+    private RmiConnector rmiConnector = RmiConnector.INSTANCE;
     private HashMap<String, HashMap<String, Double>> countryAndCurrencies = new HashMap<>();
 //    private JSONRestCountries restCountriesApi = JSONRestCountries.INSTANCE;
 
@@ -54,14 +55,16 @@ public class CountryController {
         }
         executorService.shutdown();
 
-        if (!countryAndCurrencies.containsKey(country.getName())) {
-            HashMap<String, Double> currencies = new HashMap<>();
-            for (int i = 0; i < 3; i++) {
-                Pair<String, Double> currencyPair = RmiConnector.INSTANCE.getRmiServer().exchangeRate(country.getCurrency());
-                currencies.put(currencyPair.getKey(), currencyPair.getValue());
+        if (rmiConnector.connectToRmi()) {
+            if (!countryAndCurrencies.containsKey(country.getName())) {
+                HashMap<String, Double> currencies = new HashMap<>();
+                for (int i = 0; i < 3; i++) {
+                    Pair<String, Double> currencyPair = rmiConnector.getRmiServer().exchangeRate(country.getCurrency());
+                    currencies.put(currencyPair.getKey(), currencyPair.getValue());
+                }
+                countryAndCurrencies.put(country.getName(), currencies);
+                country.setCurrencies(countryAndCurrencies.get(country.getName()));
             }
-            countryAndCurrencies.put(country.getName(), currencies);
-            country.setCurrencies(countryAndCurrencies.get(country.getName()));
         }
         if (country.getCurrencies() == null)
             country.setCurrencies(countryAndCurrencies.get(country.getName()));
@@ -79,14 +82,17 @@ public class CountryController {
     @RequestMapping(value = "/updateCountry/{name}", method = RequestMethod.PUT)
     public Country updateCountry(@PathVariable("name") String name) throws RemoteException {
         Country country = service.getCountry(name);
-        HashMap<String, Double> currenciesForCountry = countryAndCurrencies.get(name);
 
-        for (String currency : currenciesForCountry.keySet()) {
-            double exchangeRate = RmiConnector.INSTANCE.getRmiServer().exchangeRate(country.getCurrency(), currency);
-            currenciesForCountry.put(currency, exchangeRate);
+        if (rmiConnector.connectToRmi()) {
+            HashMap<String, Double> currenciesForCountry = countryAndCurrencies.get(name);
+
+            for (String currency : currenciesForCountry.keySet()) {
+                double exchangeRate = rmiConnector.getRmiServer().exchangeRate(country.getCurrency(), currency);
+                currenciesForCountry.put(currency, exchangeRate);
+            }
+
+            country.setCurrencies(currenciesForCountry);
         }
-
-        country.setCurrencies(currenciesForCountry);
 
         return country;
     }

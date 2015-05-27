@@ -20,20 +20,11 @@ public enum CurrencyLoader {
     CurrencyLoader() {
         Charset defaultCharset = Charset.defaultCharset();
         // Path to the file containing the different currencies
-//        Path currencyPath = Paths.get("Currency");
-
         URL url = getClass().getResource("/Currency");
-        Path currencyPath = null;
         try {
-            currencyPath = Paths.get(url.toURI());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
-        // Handle exception in a different way
-        try {
+            Path currencyPath = Paths.get(url.toURI());
             currencyList = Files.readAllLines(currencyPath, defaultCharset);
-        } catch (IOException e) {
+        } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
         }
     }
