@@ -42,9 +42,6 @@ public class RmiServerImpl extends UnicastRemoteObject implements RmiServer {
             for (String targetCurrency : currencies) {
                 String appendedCurrency = sourceCurrency + targetCurrency;
                 appendedCurrencies.add(appendedCurrency);
-
-//                Double value = fetchSingleCurrency(appendedCurrency);
-//                currencyExchange.put(appendedCurrency, value);
             }
         }
 
@@ -62,19 +59,6 @@ public class RmiServerImpl extends UnicastRemoteObject implements RmiServer {
             }
         }
 
-//        Future<HashMap<String, Double>> result1 = executorService.submit(new FetchCurrencyThread(partitions.get(0)));
-//        Future<HashMap<String, Double>> result2 = executorService.submit(new FetchCurrencyThread(partitions.get(1)));
-//        Future<HashMap<String, Double>> result3 = executorService.submit(new FetchCurrencyThread(partitions.get(2)));
-
-//        try {
-//            currencyExchange.putAll(result1.get());
-//            currencyExchange.putAll(result2.get());
-//            currencyExchange.putAll(result3.get());
-//        } catch (Exception e) {
-//            result1.cancel(true);
-//            result2.cancel(true);
-//            result3.cancel(true);
-//        }
         executorService.shutdown();
     }
 
