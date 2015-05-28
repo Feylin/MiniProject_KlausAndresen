@@ -37,7 +37,10 @@ public class StartServer {
 
          // Fetch currencies from yahoo
         System.out.println("Fetching initial currencies...");
+        long startTime = System.currentTimeMillis();
         RmiServerImpl.fillCurrencyCache();
+        long estimatedTime = System.currentTimeMillis() - startTime;
+        System.out.println(estimatedTime);
         System.out.println("All currencies are up to date.");
     }
 

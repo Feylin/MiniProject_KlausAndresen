@@ -13,13 +13,16 @@ import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 /**
  * Created by prep on 20-02-2015.
@@ -50,14 +53,14 @@ public class RmiServerImpl extends UnicastRemoteObject implements RmiServer {
 
         ExecutorService executorService = Executors.newFixedThreadPool(numberOfCores);
 
-        for (List<String> partition : partitions) {
-            Future<HashMap<String, Double>> result = executorService.submit(new FetchCurrencyThread(partition));
-            try {
-                currencyExchange.putAll(result.get());
-            } catch (Exception e) {
-                result.cancel(true);
+        try {
+            Collection<Callable<HashMap<String, Double>>> tasks = partitions.stream().map(FetchCurrencyThread::new).collect(Collectors.toList());
+            List<Future<HashMap<String, Double>>> results = executorService.invokeAll(tasks);
+            for(Future<HashMap<String, Double>> result : results){
+                HashMap<String, Double> currencyResult = result.get();
+                currencyExchange.putAll(currencyResult);
             }
-        }
+        } catch (ExecutionException | InterruptedException ignored) {}
 
         executorService.shutdown();
     }

@@ -18,7 +18,7 @@ import java.util.List;
 public enum ServiceConnectorImpl implements ServiceConnector {
     INSTANCE;
 
-    private static final String REST_SERVICE_URL = "http://localhost:8080/";
+    private static final String REST_SERVICE_URL = "http://localhost:8182/";
     private RestTemplate restTemplate = new RestTemplate();
 
     public List<Country> getAllCountries() {

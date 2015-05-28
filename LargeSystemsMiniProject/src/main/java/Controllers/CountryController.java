@@ -84,16 +84,27 @@ public class CountryController {
         Country country = service.getCountry(name);
 
         if (rmiConnector.connectToRmi()) {
-            HashMap<String, Double> currenciesForCountry = countryAndCurrencies.get(name);
+            if (!countryAndCurrencies.containsKey(country.getName())) {
+                HashMap<String, Double> currencies = new HashMap<>();
+                for (int i = 0; i < 3; i++) {
+                    Pair<String, Double> currencyPair = rmiConnector.getRmiServer().exchangeRate(country.getCurrency());
+                    currencies.put(currencyPair.getKey(), currencyPair.getValue());
+                }
+                countryAndCurrencies.put(country.getName(), currencies);
+                country.setCurrencies(countryAndCurrencies.get(country.getName()));
+            } else {
+                HashMap<String, Double> currenciesForCountry = countryAndCurrencies.get(name);
 
-            for (String currency : currenciesForCountry.keySet()) {
-                double exchangeRate = rmiConnector.getRmiServer().exchangeRate(country.getCurrency(), currency);
-                currenciesForCountry.put(currency, exchangeRate);
+                for (String currency : currenciesForCountry.keySet()) {
+                    double exchangeRate = rmiConnector.getRmiServer().exchangeRate(country.getCurrency(), currency);
+                    currenciesForCountry.put(currency, exchangeRate);
+                }
+                countryAndCurrencies.put(country.getName(), currenciesForCountry);
+
+                country.setCurrencies(currenciesForCountry);
             }
-            countryAndCurrencies.put(country.getName(), currenciesForCountry);
-
-            country.setCurrencies(currenciesForCountry);
-        }
+        } else if (countryAndCurrencies.containsKey(country.getName()))
+            country.setCurrencies(countryAndCurrencies.get(country.getName()));
 
         return country;
     }

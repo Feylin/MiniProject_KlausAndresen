@@ -5,6 +5,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Hyperlink;
@@ -14,6 +15,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import sample.Main;
 import sample.Model.Country;
 import sample.Service.ServiceConnector;
@@ -36,8 +39,9 @@ public class OverviewController {
     @FXML private Label lblAlpha3;
     @FXML private Label lblTimezone;
     @FXML private ImageView countryImg;
-    @FXML private BarChart chartCurrencies;
+    @FXML private BarChart<String, Double> chartCurrencies;
     @FXML private Hyperlink lnkLocation;
+    @FXML private AnchorPane rootPane;
     private ServiceConnector service = ServiceConnectorImpl.INSTANCE;
     private StringProperty nameProperty = new SimpleStringProperty();
     private StringProperty currencyProperty = new SimpleStringProperty();
@@ -91,17 +95,32 @@ public class OverviewController {
     }
 
     private void populateChart(Country country) {
+        chartCurrencies.getData().clear();
+
         if (country.getCurrencies() != null) {
             chartCurrencies.getXAxis().setLabel("Currencies");
 
             chartCurrencies.getYAxis().setLabel("X per 1 " + country.getCurrency());
-            chartCurrencies.getData().clear();
+
             XYChart.Series series = new XYChart.Series();
 
             for (Map.Entry<String, Double> entry : country.getCurrencies().entrySet())
                 series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
 
             chartCurrencies.getData().addAll(series);
+
+            final Label lblResult = new Label();
+            rootPane.getChildren().add(lblResult);
+
+            for (XYChart.Series<String, Double> doubleSeries: chartCurrencies.getData()){
+                for (XYChart.Data<String, Double> item: doubleSeries.getData()){
+                    item.getNode().setOnMousePressed((MouseEvent event) -> {
+                        lblResult.setTranslateX(event.getSceneX());
+                        lblResult.setTranslateY(event.getSceneY());
+                        lblResult.setText(String.format("%s - %s", item.getXValue(), item.getYValue()));
+                    });
+                }
+            }
         }
     }
 
