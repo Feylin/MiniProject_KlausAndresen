@@ -55,7 +55,9 @@ public class CountryController {
         }
         executorService.shutdown();
 
-        if (rmiConnector.connectToRmi()) {
+        if (countryAndCurrencies.containsKey(country.getName()))
+            country.setCurrencies(countryAndCurrencies.get(country.getName()));
+        else if (rmiConnector.connectToRmi()) {
             if (!countryAndCurrencies.containsKey(country.getName())) {
                 HashMap<String, Double> currencies = new HashMap<>();
                 for (int i = 0; i < 3; i++) {
@@ -66,8 +68,6 @@ public class CountryController {
                 country.setCurrencies(countryAndCurrencies.get(country.getName()));
             }
         }
-        if (country.getCurrencies() == null)
-            country.setCurrencies(countryAndCurrencies.get(country.getName()));
 
         return countryFromExecutor.setDescription(descriptionApi.getDescription(country))
                .setImage("http://www.geonames.org/flags/x/" + country.getAlpha2Code().toLowerCase() + ".gif");
@@ -103,8 +103,7 @@ public class CountryController {
 
                 country.setCurrencies(currenciesForCountry);
             }
-        } else if (countryAndCurrencies.containsKey(country.getName()))
-            country.setCurrencies(countryAndCurrencies.get(country.getName()));
+        }
 
         return country;
     }
